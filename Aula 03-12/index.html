@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="fetchApi()">fetch</button>
+
+    <script>
+        async function fetchApi() {
+            // const response = await fetch("http://localhost:4000/users")
+            const response = await fetch("http://localhost:4000",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name:"Paulo",
+                    idade: 220
+                })
+            })
+            console.log(typeof response)
+
+            const data_json = await response.json()
+            console.log(typeof data_json)
+
+            console.log(response)
+            console.log(data_json)
+        }
+    </script>
+</body>
+</html>

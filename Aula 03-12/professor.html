@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Storage</title>
+</head>
+<body>
+
+    <form id="myForm" action="">
+      <input type="file" id="myFile">
+
+      <button type="submit" >Criar novo post</button>
+    </form>
+
+
+    <div id="feed">
+      <div id="post">
+
+      </div>
+    </div>
+  
+  <script>
+
+    const myForm = document.getElementById("myForm")
+
+    myForm.addEventListener("submit", (event) => {
+      event.preventDefault()
+
+      const myFile = document.getElementById("myFile").files[0]
+
+      readFile(myFile)
+    })
+
+    function readFile(file) {
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        const post = {
+          description: "myDescription",
+          urlImage: e.target.result
+        }
+
+        create(post)
+        read(post)
+      }
+
+      reader.readAsDataURL(file)
+    }
+
+    function create(post) {
+      console.log(post)
+      let posts = [];
+
+      if (!localStorage.getItem("posts")) {
+        post.id = 0
+        posts.push(post)
+        localStorage.setItem("posts", JSON.stringify(posts))
+      } else {
+        posts = JSON.parse(localStorage.getItem("posts"))
+        post.id = posts.length 
+        posts.push(post)
+        localStorage.setItem("posts", JSON.stringify(posts))
+      }
+    }
+
+    function read(post) {
+      const feed = document.getElementById("feed")
+      const div = document.createElement("div")
+      const image = document.createElement("img")
+      const btnDelete = document.createElement("button")
+      btnDelete.innerText = "Veja o id"
+
+
+      btnDelete.addEventListener("click", (e) => {
+        div.remove()
+        deletePost(post.id)
+      })
+
+      image.src = post.urlImage
+
+      div.innerText = post.description
+      div.appendChild(image)
+      div.appendChild(btnDelete)
+      feed.appendChild(div)
+    }
+
+    function deletePost(id) {
+      let posts = localStorage.getItem("posts") || []
+
+      posts = posts.map((element) => {
+        if (element.id !== id) {
+          return element
+        }
+      })
+      localStorage.setItem("posts", posts)
+    }
+
+    function readAll() {
+      const posts = JSON.parse(localStorage.getItem("posts")) || []
+      
+      posts.forEach(post => {
+        read(post)
+      });
+    }
+
+    readAll()
+
+
+  </script>
+</body>
+</html>
